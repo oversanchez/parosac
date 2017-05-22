@@ -15,6 +15,18 @@ class CreacionTablaComensal extends Migration
     {
         Schema::create('comensal', function (Blueprint $table) {
             $table->increments('id');
+            $table->string('apellido_paterno');
+            $table->string('apellido_materno')->nullable();
+            $table->string('nombres');
+            $table->string('numero_documento');
+            $table->text('huella1')->nullable();
+            $table->text('huella2')->nullable();
+            $table->string('url_foto')->nullable();
+            $table->boolean('activo')->default(true);
+
+            $table->integer('cliente_id')->unsigned();
+            $table->foreign('cliente_id')->references('id')->on('cliente');
+
             $table->timestamps();
         });
     }
@@ -29,3 +41,5 @@ class CreacionTablaComensal extends Migration
         Schema::dropIfExists('comensal');
     }
 }
+
+
