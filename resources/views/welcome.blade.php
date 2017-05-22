@@ -53,7 +53,7 @@
                     </div>
                     <h2 style="color: #d65b21;">Buena comida, La mejor</h2>
                     <a href="/mantenimientos/cliente" class="btn btn-primary">Entrar como cliente</a>
-                    <a href="/servir" class="btn btn-primary">Servir</a>
+                    <a href="/mantenimientos/servir" class="btn btn-primary">Servir</a>
                 </div>
             </div>
         </div>

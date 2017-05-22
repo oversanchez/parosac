@@ -50,7 +50,7 @@
             <a href="#" class="navbar-brand" style="height: 50px;"></a></div>
         <div class="navbar-collapse collapse">
             <ul class="nav navbar-nav">
-                <li><a href="#">Inicio</a></li>
+                <li><a href="/">Inicio</a></li>
                 <li class="dropdown"><a href="#" data-toggle="dropdown" class="dropdown-toggle">Operaciones <b
                                 class="caret"></b></a>
                     <ul class="dropdown-menu col-menu-2">

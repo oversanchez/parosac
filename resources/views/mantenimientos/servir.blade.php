@@ -3,11 +3,11 @@
 @section('content')
     <div id="pcont" class="container-fluid">
         <div class="page-head">
-            <h2 style="display:inline-block;">Servir</h2>
+            <h2 style="display:inline-block;">Compañia</h2>
             <i id="loading" style="display:none;" class="fa fa-2x fa-spinner fa-spin"></i>
             <select class="input-lg" id="cmbCliente" style="width: 700px;margin-top:-20px;"
                     onchange="listarMenus()"></select>
-            <input id="txtFecha" class="form-control date datetime input-lg"
+            <input id="txtFecha" onchange="listarMenus()" class="form-control date datetime input-lg"
                    data-min-view="2" data-date-format="dd/mm/yyyy" type="text"
                    maxlength="10" data-parsley-trigger="change"
                    data-parsley-required="true" style="font-size: 22px;font-weight: 600;width: 180px;display:inline-block;margin-top:-5px;">
@@ -18,7 +18,7 @@
                 <div class="col-sm-12 col-md-6">
                     <div class="tab-container">
                         <ul class="nav nav-tabs">
-                            <li class="active"><a href="#tp_1" data-toggle="tab">Platos Escogidos</a></li>
+                            <li class="active"><a style="font-size: 23px;font-weight: 700;color: #1f3b62;" href="#tp_1" data-toggle="tab">Buscar Comensal</a></li>
                         </ul>
                         <div class="tab-content">
                             <div id="tp_1" class="tab-pane active cont">
@@ -28,7 +28,7 @@
                                         <input onchange="buscarDocumento(this)"
                                                id="txtDocumento" class="form-control" type="text"
                                                data-parsley-trigger="change" data-parsley-length="[8,15]"
-                                               data-parsley-required="true" style="font-size: 22px;font-weight: 600;">
+                                               data-parsley-required="true" style="font-size: 17px;font-weight: 600;">
                                     </div>
                                     <div class="col-sm-5">
                                         <button class="btn btn-default"><i class="fa fa-search"></i></button>
@@ -36,14 +36,29 @@
                                         <button class="btn btn-default" onclick="cancelarPedido()"><i class="fa fa-ban"></i> Cancelar</button>
                                     </div>
                                 </div>
-                                <div class="row">
-                                    <div class="col-sm-3">
-                                        <img id="imgFoto" class="img-responsive">
+                                <blockquote style="margin-top:20px;">
+                                    <div class="row" style="margin-top:0px;">
+                                        <div class="col-sm-3">
+                                            <img id="imgFoto" class="img-responsive">
+                                        </div>
+                                        <div class="col-sm-9">
+                                            <label id="lblComensal"></label>
+                                            <div>
+                                                <table class="table table-responsive" id="tblListado">
+                                                    <thead>
+                                                        <tr>
+                                                            <th style="width: 90%;">Plato</th>
+                                                            <th style="width: 10%;">Quitar</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div class="col-sm-9">
-                                        <label id="lblComensal"></label>
-                                    </div>
-                                </div>
+                                </blockquote>
                             </div>
                         </div>
                     </div>
@@ -51,8 +66,7 @@
                 <div class="col-sm-12 col-md-6">
                     <div class="tab-container">
                         <ul class="nav nav-tabs">
-                            <li class="active"><a href="#tp1" data-toggle="tab">Platos del día</a></li>
-                            <li><a href="#tp2" data-toggle="tab">Postres</a></li>
+                            <li class="active"><a style="font-size: 23px;font-weight: 700;color: green;" href="#tp1" data-toggle="tab">Elección</a></li>
                         </ul>
                         <div class="tab-content">
                             <div id="tp1" class="tab-pane active cont">
@@ -99,7 +113,7 @@
         });
 
         function cancelarPedido(){
-            $("#txtDocumento").value("");
+            $("#txtDocumento").val("");
             $("#imgFoto").attr('src','');
             $("#lblComensal").html("");
             $("#txtDocumento").focus();
@@ -112,22 +126,12 @@
                 else
                     modificar()
             }
-
         }
 
         function obtenerDatos() {
             var info = [{
                 "_token": "{{ csrf_token() }}",
                 "nombres": $("#txtPersona_Nombres").val(),
-                "apellido_paterno": $("#txtPersona_ApPat").val(),
-                "apellido_materno": $("#txtPersona_ApMat").val(),
-                "tipo_documento": $("#cmbPersona_TipoDoc").val(),
-                "numero_documento": $("#txtPersona_Numero_Documento").val(),
-                "sexo": $("#cmbPersona_Sexo").val(),
-                "fecha_nacimiento": $("#txtPersona_FechaNac").val(),
-                "direccion": $("#txtPersona_Direccion").val(),
-                "telf_fijo": $("#txtPersona_Telf_Fijo").val(),
-
                 "codigo_educando": $("#txtCodigo_Educando").val(),
                 "codigo_recaudacion": $("#txtCodigo_Recaudacion").val(),
                 "colegio_procedencia_id": parseInt($("#cmbColegio_Procedencia").val()),
@@ -324,7 +328,7 @@
                             imagenes += '           <img  src="' + value["plato"]["url_foto"] + '">';
                             imagenes += '           <div class="over">';
                             imagenes += '               <div class="func">';
-                            imagenes += '                   <a href="#" onclick="agregar_plato(this)"><i class="fa fa-plus"></i></a>';
+                            imagenes += '                   <a href="#" plato_nombre="'+value["plato"]["nombre"]+'" onclick="agregar_plato(this)"><i class="fa fa-plus"></i></a>';
                             imagenes += '                   <a href="' + value["plato"]["url_foto"] + '" class="image-zoom"><i class="fa fa-search"></i></a>';
                             imagenes += '               </div>';
                             imagenes += '           </div>';
@@ -447,6 +451,36 @@
             $("#txtDocumento").select();
         });
 
+        function buscarHuella(){
+            $.ajax({
+                url: "http://127.0.0.1:12345",
+                type: "POST",
+                data: {"tipo" : "C"},
+                dataType: "json",
+                beforeSend: function () {
+                    $("#loading").show();
+                    alert(1);
+                },
+                success: function (data) {
+                    console.log(data);
+                },
+                error: function (request, status, error) {
+                    mostrar_error(request.responseText);
+                },
+                complete: function () {
+                    $("#loading").hide();
+                }
+            });
+        }
+
+        function agregar_plato(obj){
+            var plato = $(obj).attr("plato_nombre");
+            $("#dvItems").append(plato + "<button onclick='eliminarItem(this)' class='btn btn-default'><i class='fa fa-trash-o'></i></button>");
+        }
+
+        function eliminarItem(obj){
+            $(obj).remove();
+        }
 
     </script>
 @endsection

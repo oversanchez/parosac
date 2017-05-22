@@ -12,7 +12,7 @@ class Parosac_Seeder extends Seeder
     public function run()
     {
         DB::table('cliente')->insert([
-            ["ruc" => "20480357443","razon_social"=>"Juvitec","representante"=>"Victor Llanos Baltodano","usuario"=>"biosis","clave"=>'123'],
+            ["ruc" => "20555645661","razon_social"=>"H2O CONTRATISTAS GENERALES SAC","representante"=>" H2o Contratistas Generales Sociedad ","usuario"=>"h2o","clave"=>'123'],
         ]);
 
         DB::table('comensal')->insert([
