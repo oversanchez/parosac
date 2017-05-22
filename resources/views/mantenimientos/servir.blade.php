@@ -10,11 +10,44 @@
             <input id="txtFecha" class="form-control date datetime input-lg"
                    data-min-view="2" data-date-format="dd/mm/yyyy" type="text"
                    maxlength="10" data-parsley-trigger="change"
-                   data-parsley-required="true" style="width: 120px;display:inline-block;margin-top:-5px;">
+                   data-parsley-required="true" style="font-size: 22px;font-weight: 600;width: 180px;display:inline-block;margin-top:-5px;">
             <button class="btn btn-default" onclick="listarMenus()"><i class="fa fa-refresh"></i></button>
         </div>
         <div class="cl-mcont">
             <div class="row">
+                <div class="col-sm-12 col-md-6">
+                    <div class="tab-container">
+                        <ul class="nav nav-tabs">
+                            <li class="active"><a href="#tp_1" data-toggle="tab">Platos Escogidos</a></li>
+                        </ul>
+                        <div class="tab-content">
+                            <div id="tp_1" class="tab-pane active cont">
+                                <div class="row">
+                                    <label class="col-sm-2" style="font-size: 22px;padding: 5px 0px;">Nro Doc.</label>
+                                    <div class="col-sm-3">
+                                        <input onchange="buscarDocumento(this)"
+                                               id="txtDocumento" class="form-control" type="text"
+                                               data-parsley-trigger="change" data-parsley-length="[8,15]"
+                                               data-parsley-required="true" style="font-size: 22px;font-weight: 600;">
+                                    </div>
+                                    <div class="col-sm-5">
+                                        <button class="btn btn-default"><i class="fa fa-search"></i></button>
+                                        <button class="btn btn-primary" onclick="buscarHuella()"><i class="fa fa-hand-o-up"></i></button>
+                                        <button class="btn btn-default" onclick="cancelarPedido()"><i class="fa fa-ban"></i> Cancelar</button>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        <img id="imgFoto" class="img-responsive">
+                                    </div>
+                                    <div class="col-sm-9">
+                                        <label id="lblComensal"></label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <div class="col-sm-12 col-md-6">
                     <div class="tab-container">
                         <ul class="nav nav-tabs">
@@ -43,33 +76,6 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-sm-12 col-md-6">
-                    <div class="tab-container">
-                        <ul class="nav nav-tabs">
-                            <li class="active"><a href="#tp_1" data-toggle="tab">Platos Escogidos</a></li>
-                        </ul>
-                        <div class="tab-content">
-                            <div id="tp_1" class="tab-pane active cont">
-                                <div class="row">
-                                    <div class="col-sm-4">
-                                        <img id="imgFoto" class="img-responsive">
-                                    </div>
-                                    <label class="col-sm-2" style="width: 58px;padding: 5px 0px;">Nro Doc.</label>
-                                    <div class="col-sm-3">
-                                        <input onchange="buscarDocumento(this)"
-                                               id="txtDocumento" class="form-control" type="text"
-                                               data-parsley-trigger="change" data-parsley-length="[8,15]"
-                                               data-parsley-required="true">
-                                    </div>
-                                    <div class="col-sm-3">
-                                        <button class="btn btn-default"><i class="fa fa-search"></i></button>
-                                        <button class="btn btn-primary" onclick="buscarHuella()"><i class="fa fa-hand-o-up"></i></button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
             </div>
         </div>
     </div>
@@ -92,6 +98,12 @@
             cancelar();
         });
 
+        function cancelarPedido(){
+            $("#txtDocumento").value("");
+            $("#imgFoto").attr('src','');
+            $("#lblComensal").html("");
+            $("#txtDocumento").focus();
+        }
         function guardar() {
             var accion = $("#hddCodigo").val() == "" ? true : false;
             if ($("#frmCliente").parsley().validate()) {
@@ -299,7 +311,6 @@
                     },
                     success: function (data) {
                         var $container = $('.gallery-cont');
-                        console.log(data);
                         $container.masonry('destroy');
 
                         var imagenes = "";
@@ -408,6 +419,7 @@
                         if(data.length > 0){
                             $.each(data, function (index, value) {
                                 $("#imgFoto").attr('src',value["url_foto"]);
+                                $("#lblComensal").html("<h3>"+value["apellido_paterno"]+" "+value["apellido_materno"]+" "+value["nombres"]+"</h3>");
                             });
                         }else{
                             $("#imgFoto").attr('src','');
